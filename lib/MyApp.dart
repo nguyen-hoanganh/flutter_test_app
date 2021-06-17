@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_testt/TransacionList.dart';
 import 'package:flutter_app_testt/transaction.dart';
 
 class MyApp extends StatefulWidget {
@@ -31,35 +32,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> _buildWidgetList(){
-      int index = 0;
-      return  _transactions.map((eachTransaction){
-        index++;
-        return Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          color: index % 2 == 0 ? Colors.green : Colors.teal,
-          elevation: 10,
-          child: ListTile(
-            leading: Icon(Icons.ac_unit),
-            title: Text(eachTransaction.content,style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),),
-            subtitle: Text('price: ${eachTransaction.amount}',style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: Colors.white
-            ),),
-            onTap: (){
-              print('Bạn vừa chọn ${eachTransaction.content}');
-            },
-          ),
-        );
-      }).toList();
-    }
+
     return MaterialApp(
       title: 'Đây là app đầu tiên của tôi',
       home: Scaffold(
@@ -111,9 +84,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   color: Colors.pinkAccent,
                 ),
               ),
-              Column(
-                children:_buildWidgetList()
-              )
+              TransactionList(transactions: _transactions)
             ],
           ),
         ),
