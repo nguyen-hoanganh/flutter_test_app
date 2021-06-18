@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class Transaction {
   String content;
   double amount;
+  DateTime createdDate;
 
-  Transaction({this.content, this.amount});
+  Transaction({this.content, this.amount, this.createdDate});
 
   @override
   String toString() {

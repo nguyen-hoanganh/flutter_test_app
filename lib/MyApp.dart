@@ -30,19 +30,24 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
   }
 
-  @override
-  Widget build(BuildContext context) {
+  void _insertTransaction() {
+    if (_transaction.content.isEmpty ||
+        _transaction.amount == 0.0 ||
+        _transaction.amount.isNaN) {
+      return;
+    }
+    _transaction.createdDate = DateTime.now();
+    _transactions.add(_transaction);
+    _transaction = Transaction(content: '', amount: 0.0);
+    _contentController.text = '';
+    _amountController.text = '';
+  }
 
-    return MaterialApp(
-      title: 'Đây là app đầu tiên của tôi',
-      home: Scaffold(
-        key: _scaffoldkey,
-        body: SafeArea(
-          minimum: const EdgeInsets.only(
-            left: 20,
-            right: 20,
-          ),
-          child: Column(
+  void _showButtomShet() {
+    showModalBottomSheet(
+        context: this.context,
+        builder: (context) {
+          return Column(
             children: [
               TextField(
                 onChanged: (text) {
@@ -62,24 +67,64 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 controller: _amountController,
                 decoration: InputDecoration(labelText: 'Amount'),
               ),
-              SizedBox(height: 20,),
+              RaisedButton(
+                onPressed: () {
+                  setState(() {
+                    this._insertTransaction();
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: Text('Save'),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Cancel'),
+              ),
+            ],
+          );
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Đây là màn của tôi '),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                setState(() {
+                  this._insertTransaction();
+                });
+                print('bạn đã click vào add');
+              })
+        ],
+      ),
+      key: _scaffoldkey,
+      body: SafeArea(
+        minimum: const EdgeInsets.only(
+          left: 20,
+          right: 20,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 20,
+              ),
               ButtonTheme(
                 height: 40,
                 child: FlatButton(
                   onPressed: () {
-                    setState(() {
-                      _transactions.add(_transaction);
-                      _transaction = Transaction(content: '',amount: 0.0);
-                      _contentController.text = '';
-                      _amountController.text = '';
-                    });
-                    _scaffoldkey.currentState.showSnackBar(SnackBar(
-                      content: Text(
-                          'Transaction List: ' + _transaction.toString()),
-                      duration: Duration(seconds: 3),
-                    ));
+                    this._showButtomShet();
                   },
-                  child: Text('Insert',style: TextStyle(fontSize: 18),),
+                  child: Text(
+                    'Insert',
+                    style: TextStyle(fontSize: 18),
+                  ),
                   textColor: Colors.white,
                   color: Colors.pinkAccent,
                 ),
